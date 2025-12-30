@@ -8,9 +8,9 @@ from .managers import UserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    login = models.CharField(max_length=255, unique=True)
+    login = models.CharField(max_length=255, unique=True)  # type: ignore
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)  # type: ignore
 
     objects = UserManager()
 

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
+from datetime import timedelta
 from pathlib import Path
 from typing import Final
 
@@ -62,6 +63,18 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'config.urls'
 
+# Django REST Framework configuration
+# https://www.django-rest-framework.org/api-guide/settings/
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+}
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -110,6 +123,21 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# Custom User model
+# https://docs.djangoproject.com/en/5.2/topics/auth/customizing/#substituting-a-custom-user-model
+
+AUTH_USER_MODEL = 'users.User'
+
+
+# Simple JWT configuration
+# https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html#settings
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=10),
+}
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
@@ -132,13 +160,9 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Custom User model
-# https://docs.djangoproject.com/en/5.2/topics/auth/customizing/#substituting-a-custom-user-model
-
-AUTH_USER_MODEL = 'users.User'
-
 # CORS configuration
 # https://pypi.org/project/django-cors-headers/
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
