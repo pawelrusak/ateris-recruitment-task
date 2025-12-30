@@ -12,3 +12,12 @@ services:
           target: /app/frontend
           ignore:
             - node_modules
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app/backend
+    env_file:
+      - ./backend/.env
+
