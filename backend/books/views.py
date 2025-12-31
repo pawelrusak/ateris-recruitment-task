@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from rest_framework import viewsets, status
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -5,6 +6,8 @@ from rest_framework.response import Response
 from .models import Book
 from .services.google_books_services import GoogleBooksService
 from .serializers import BookSerializer
+
+User = get_user_model()
 
 
 class ExternalBookListViewSet(viewsets.ViewSet):
@@ -69,12 +72,21 @@ class BookListCreatedViewSet(viewsets.ViewSet):
         Endpoint:
         GET /api/books/
         """
-        query_owner = request.query_params.get("owner", None)
+        query_owner = (request.query_params.get("owner") or "").strip()
 
-        owner = query_owner if query_owner is not None else request.user
+        if query_owner:
 
-        books = Book.objects.filter(owner=owner)
+            try:
+                user = User.objects.get(login=query_owner)
+            except User.DoesNotExist:
+                return Response(
+                    {"error": "Books of owner not found."},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
+            books = Book.objects.filter(owner=user)
+        else:
+            books = Book.objects.filter(owner=request.user)
 
         serializer = BookSerializer(books, many=True)
-
         return Response(serializer.data)
