@@ -90,3 +90,27 @@ class BookListCreatedViewSet(viewsets.ViewSet):
 
         serializer = BookSerializer(books, many=True)
         return Response(serializer.data)
+
+    def retrieve(self, request: Request, pk: str) -> Response:
+        """
+        Endpoint:
+        GET /api/books/{pk}/?owner=<owner_login>
+        """
+        owner_login = (request.query_params.get("owner") or "").strip()
+        if not owner_login:
+            return Response(
+                {"error": "Query param 'owner' is required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            book = Book.objects.get(pk=pk, owner__login=owner_login)
+
+        except Book.DoesNotExist:
+            return Response(
+                {"error": "Book not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        serializer = BookSerializer(book)
+        return Response(serializer.data, status=status.HTTP_200_OK)
