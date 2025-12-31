@@ -1,10 +1,13 @@
 import type { ExternalBook } from "@/types";
 
+type ExternalBookId = ExternalBook["id"];
+
 type BookSearchResultProps = {
   author: string;
   books: ExternalBook[] | undefined;
   isLoading: boolean;
   isError: boolean;
+  onBookSelect: (bookId: ExternalBookId) => void;
 };
 
 const BooksSearchResult = ({
@@ -12,10 +15,15 @@ const BooksSearchResult = ({
   isLoading,
   isError,
   author,
+  onBookSelect,
 }: BookSearchResultProps) => {
   if (isLoading) return <p>Loading...</p>;
 
   if (isError) return <p>Error fetching books for author: {author}</p>;
+
+  const handleBookItemClick = (bookId: ExternalBookId) => {
+    onBookSelect(bookId);
+  };
 
   return (
     <section>
@@ -28,6 +36,9 @@ const BooksSearchResult = ({
                   <h2>{book.title}</h2>
                 </header>
                 <p>Author(s): {book.authors.join(", ")}</p>
+                <button onClick={() => handleBookItemClick(book.id)}>
+                  Add
+                </button>
                 <hr />
               </li>
             ))}

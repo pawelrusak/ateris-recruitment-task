@@ -33,4 +33,14 @@ export const booksService = {
 
     return data.books;
   },
+
+  createBookByGoogleVolumeId: async (google_volume_id: string) => {
+    const googleVolumeId = google_volume_id.trim();
+
+    const { data } = await api.post<UserBook>("/api/books/", {
+      google_volume_id: googleVolumeId,
+    });
+
+    return data;
+  },
 };

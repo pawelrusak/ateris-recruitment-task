@@ -8,6 +8,7 @@ import LoginView from "@/views/login.view";
 import PrivateLayout from "@/layout/private.layout";
 import ProtectedRoute from "@/helpers/protected-router.component";
 import PublicRoute from "@/helpers/public-router.component";
+import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const Root = () => {
           </Route>
         </Routes>
       </BrowserRouter>
+      <Toaster />
     </QueryClientProvider>
   );
 };

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useExternalBooks } from "@/helpers/hooks.books";
+import { useExternalBooks, useCreateExternalBook } from "@/helpers/hooks.books";
+
 import BooksSearchResult from "@/components/book-search-result.component";
 
 const ExternalBooksView = () => {
@@ -9,6 +10,7 @@ const ExternalBooksView = () => {
     isLoading,
     isError,
   } = useExternalBooks(author.trim() ? author : null);
+  const createBookMutation = useCreateExternalBook();
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -16,6 +18,12 @@ const ExternalBooksView = () => {
     const authorName = String(formData.get("author")?.toString().trim() ?? "");
 
     setAuthor(authorName);
+  };
+
+  const handleBookSelect = (bookId: string) => {
+    console.log(`Selected book ID: ${bookId}`);
+    createBookMutation.mutate(bookId);
+    // Here you can add logic to add the book to the user's collection
   };
 
   return (
@@ -40,6 +48,7 @@ const ExternalBooksView = () => {
           isLoading={isLoading}
           isError={isError}
           author={author}
+          onBookSelect={handleBookSelect}
         />
       </section>
     </main>
