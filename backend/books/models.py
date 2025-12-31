@@ -13,7 +13,7 @@ class Book(models.Model):
     title = models.CharField(max_length=512)
     authors = models.ManyToManyField(Author, related_name="books")
     google_volume_id = models.CharField(max_length=64)
-    published_at = models.DateField(null=True, blank=True)
+    published_at = models.CharField(max_length=64, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(
         get_user_model(),
