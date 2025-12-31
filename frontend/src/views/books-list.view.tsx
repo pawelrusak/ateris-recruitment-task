@@ -1,14 +1,26 @@
 import { Link } from "react-router";
+import { useParams } from "react-router";
 
 import { useBooks } from "@/helpers/hooks.books";
 
 const BooksListView = () => {
-  const { data, isLoading, isError, error } = useBooks();
+  const params = useParams<{ owner?: string }>();
+  console.log(params);
+
+  const { data, isLoading, isError, error } = useBooks(params.owner || null);
 
   if (isLoading) return <p>Loading...</p>;
 
   if (isError) {
-    return <div>Error {JSON.stringify(error)}</div>;
+    // eslint-disable-next-line
+    // @ts-ignore
+    const hasNotFound = error.status === 404;
+
+    const message = hasNotFound
+      ? "404 Not Found"
+      : `Error ${JSON.stringify(error)}}`;
+
+    return <main>{message}</main>;
   }
 
   const books = data || [];
@@ -31,7 +43,7 @@ const BooksListView = () => {
               </p>
               <p>Published at: {book.published_at}</p>
 
-              <Link to={`/books/${book.owner.login}`}>Details</Link>
+              <Link to={`/books/${book.owner.login}/${book.id}`}>Details</Link>
               <hr />
             </li>
           ))

@@ -23,7 +23,8 @@ const Root = () => {
             <Route element={<PrivateLayout />}>
               <Route path="/" element={<ExternalBooksView />} />
               <Route path="/books" element={<BooksListView />} />
-              <Route path="/books/:owner" element={<BookDetailsView />} />
+              <Route path="/books/:owner" element={<BooksListView />} />
+              <Route path="/books/:owner/:id" element={<BookDetailsView />} />
             </Route>
           </Route>
         </Routes>
