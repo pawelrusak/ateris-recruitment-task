@@ -4,6 +4,7 @@ Serializer for book APIs
 from rest_framework import serializers
 
 from .models import Book, Author
+from django.contrib.auth import get_user_model
 
 
 class AuthorSerializer(serializers.ModelSerializer):
@@ -16,8 +17,15 @@ class AuthorSerializer(serializers.ModelSerializer):
         }
 
 
+class OwnerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ['id', 'login']
+
+
 class BookSerializer(serializers.ModelSerializer):
     authors = AuthorSerializer(many=True, required=False)
+    owner = OwnerSerializer(read_only=True)
 
     class Meta:
         model = Book
@@ -25,11 +33,12 @@ class BookSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'authors',
+            'owner',
             'google_volume_id',
             'published_at',
             'created_at',
         ]
-        read_only_fields = ['id', 'created_at']
+        read_only_fields = ['id',  'owner', 'created_at']
 
     def _get_or_create_authors(self, authors: list[dict], book: Book):
         unique = set()
