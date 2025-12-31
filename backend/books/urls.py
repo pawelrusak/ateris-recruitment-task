@@ -1,7 +1,11 @@
 from django.urls import include, path
 from rest_framework.routers import SimpleRouter
 
-from .views import ExternalBookListViewSet, BookListCreatedViewSet
+from .views import (
+    ExternalBookListViewSet,
+    BookListCreatedViewSet,
+    VoteViewSet
+)
 
 router = SimpleRouter()
 router.register(
@@ -14,6 +18,12 @@ router.register(
     "books",
     BookListCreatedViewSet,
     basename="books"
+)
+
+router.register(
+    "votes",
+    VoteViewSet,
+    basename="votes"
 )
 
 

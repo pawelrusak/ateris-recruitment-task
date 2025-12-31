@@ -134,7 +134,7 @@ AUTH_USER_MODEL = 'users.User'
 # https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html#settings
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=10),
 }
 

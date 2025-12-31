@@ -2,8 +2,10 @@ from django.contrib.auth import get_user_model
 from rest_framework import viewsets, status
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.decorators import action
 
-from .models import Book
+from .models import Book, BookVote
+from django.shortcuts import get_object_or_404
 from .services.google_books_services import GoogleBooksService
 from .serializers import BookSerializer
 
@@ -114,3 +116,35 @@ class BookListCreatedViewSet(viewsets.ViewSet):
 
         serializer = BookSerializer(book)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class VoteViewSet(viewsets.ViewSet):
+    @action(detail=True, methods=["post"], url_path="toggle")
+    def toggle(self, request, pk):
+        book = get_object_or_404(Book, pk=pk)
+
+        vote, created = BookVote.objects.get_or_create(
+            user=request.user, book=book)
+        if not created:
+            vote.delete()
+            liked = False
+        else:
+            liked = True
+
+        votes_count = BookVote.objects.filter(book=book).count()
+
+        return Response({"liked": liked, "votes_count": votes_count})
+
+    def retrieve(self, request, pk):
+
+        book = get_object_or_404(Book, pk=pk)
+
+        liked = BookVote.objects.filter(user=request.user, book=book).exists()
+        votes_count = BookVote.objects.filter(book=book).count()
+
+        return Response(
+            {
+                "liked": liked,
+                "votes_count": votes_count,
+            }
+        )

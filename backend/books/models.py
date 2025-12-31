@@ -32,3 +32,19 @@ class Book(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class BookVote(models.Model):
+    user = models.ForeignKey(
+        get_user_model(), on_delete=models.CASCADE, related_name="book_votes")
+    book = models.ForeignKey(
+        Book, on_delete=models.CASCADE, related_name="votes")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "book"],
+                name="unique_like_per_user_per_book",
+            )
+        ]
