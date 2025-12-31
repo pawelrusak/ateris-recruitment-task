@@ -7,6 +7,7 @@ import requests
 from .google_books_types import (
     GoogleBooksVolumesResponse,
     GoogleBooksTransformedItem,
+    GoogleBooksVolumeItem,
 )
 
 GOOGLE_BOOKS_BASE_URL: Final = "https://www.googleapis.com/books/v1/volumes"
@@ -18,7 +19,11 @@ class BookFetchError(RuntimeError):
     pass
 
 
-class QueryParamError(ValueError):
+class QueryStringError(ValueError):
+    pass
+
+
+class UrlParamError(ValueError):
     pass
 
 
@@ -32,7 +37,7 @@ class GoogleBooksService:
         author = (author or "").strip()
 
         if not author:
-            raise QueryParamError("Author name must be provided")
+            raise QueryStringError("Author name must be provided")
 
         q_param = f"{GOOGLE_BOOKS_INAUTHOR_QUERY_PREFIX}{author}"
 
@@ -50,6 +55,20 @@ class GoogleBooksService:
         except requests.RequestException:
             raise BookFetchError("Failed to fetch books from external API")
 
+    def fetch_book_item_by_id(self, google_volume_id: str):
+        if not google_volume_id:
+            raise UrlParamError("google_volume_id must be provided")
+
+        url = f"{GOOGLE_BOOKS_BASE_URL}/{google_volume_id}"
+
+        try:
+            resp = requests.get(url, timeout=10.0)
+            resp.raise_for_status()
+            return resp.json()
+
+        except requests.RequestException:
+            raise BookFetchError("Failed to fetch book item from external API")
+
     def transform_google_books_response(
         self,
         data: GoogleBooksVolumesResponse
@@ -63,3 +82,23 @@ class GoogleBooksService:
             }
             for item in data["items"]
         ]
+
+    def transform_google_book_detail_response(
+            self,
+            data: GoogleBooksVolumeItem
+    ):
+
+        volume_info = data.get("volumeInfo", {})
+
+        authors = volume_info.get("authors", [])  # <-- remove comma
+
+        authors_list = [{"name": a.strip()}
+                        for a in authors if a and a.strip()]
+
+        payload = {
+            "title": volume_info.get("title", ""),
+            "authors": authors_list,
+            "google_volume_id": data.get("id", ""),
+            "published_at": volume_info.get("publishedDate", None),
+        }
+        return payload
