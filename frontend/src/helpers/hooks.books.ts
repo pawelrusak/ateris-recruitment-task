@@ -39,3 +39,15 @@ export const useCreateExternalBook = () => {
     },
   });
 };
+
+export const useBookDetails = (id: string, owner: string) => {
+  const hasAccess = Boolean(localStorage.getItem(ACCESS_TOKEN));
+  const bookId = id.trim();
+  const ownerValue = owner.trim();
+
+  return useQuery({
+    queryKey: ["bookDetails", bookId, ownerValue],
+    queryFn: () => booksService.fetchBookByIdAndOwner(bookId, ownerValue),
+    enabled: hasAccess && bookId.length > 0 && ownerValue.length > 0,
+  });
+};

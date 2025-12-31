@@ -34,6 +34,17 @@ export const booksService = {
     return data.books;
   },
 
+  fetchBookByIdAndOwner: async (id: string, owner: string) => {
+    const bookId = id.trim();
+    const ownerValue = owner.trim();
+
+    const { data } = await api.get<UserBook>(`/api/books/${bookId}/`, {
+      params: { owner: ownerValue },
+    });
+
+    return data;
+  },
+
   createBookByGoogleVolumeId: async (google_volume_id: string) => {
     const googleVolumeId = google_volume_id.trim();
 
