@@ -1,6 +1,9 @@
 import { NavLink, Outlet } from "react-router";
+import { useLogout } from "@/helpers/hooks.auth";
 
 const PrivateLayout = () => {
+  const logout = useLogout();
+
   return (
     <div>
       <nav>
@@ -12,7 +15,7 @@ const PrivateLayout = () => {
             <NavLink to="/books">My Books</NavLink>
           </li>
           <li>
-            <button>Logout</button>
+            <button onClick={logout}>Logout</button>
           </li>
         </ul>
       </nav>
