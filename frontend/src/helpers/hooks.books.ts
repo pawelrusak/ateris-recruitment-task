@@ -4,7 +4,7 @@ import { ACCESS_TOKEN } from "@/services/api.config";
 
 type Owner = string | null;
 
-export function useBooks(owner: Owner) {
+export const useBooks = (owner: Owner) => {
   const hasAccess = Boolean(localStorage.getItem(ACCESS_TOKEN));
 
   return useQuery({
@@ -12,4 +12,15 @@ export function useBooks(owner: Owner) {
     queryFn: () => booksService.fetchBooks(owner),
     enabled: hasAccess,
   });
-}
+};
+
+export const useExternalBooks = (author: string | null) => {
+  const hasAccess = Boolean(localStorage.getItem(ACCESS_TOKEN));
+  const authorValue = (author ?? "").trim();
+
+  return useQuery({
+    queryKey: ["externalBooks", authorValue],
+    queryFn: () => booksService.fetchBookByAuthor(authorValue),
+    enabled: hasAccess && authorValue.length > 0,
+  });
+};

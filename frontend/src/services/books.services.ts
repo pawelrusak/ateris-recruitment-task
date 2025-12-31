@@ -1,10 +1,12 @@
 import api from "./api.config";
-import type { UserBook } from "@/types";
+import type { UserBook, ExternalBook } from "@/types";
 
-type Owner = string | null;
+type ExternalBooksResponse = {
+  books: ExternalBook[];
+};
 
 export const booksService = {
-  fetchBooks: async (owner: Owner): Promise<UserBook[]> => {
+  fetchBooks: async (owner: string | null) => {
     const ownerValue = (owner ?? "").trim();
     console.log("Fetching books for owner:", ownerValue);
 
@@ -13,5 +15,22 @@ export const booksService = {
     });
 
     return data;
+  },
+
+  fetchBookByAuthor: async (author: string): Promise<ExternalBook[]> => {
+    const authorValue = author.trim();
+
+    if (!authorValue) {
+      return [];
+    }
+
+    const { data } = await api.get<ExternalBooksResponse>(
+      "/api/external-books/",
+      {
+        params: { author: authorValue },
+      }
+    );
+
+    return data.books;
   },
 };

@@ -22,3 +22,9 @@ export type UserBook = {
   published_at: string;
   created_at: string;
 };
+
+export type ExternalBook = {
+  id: string;
+  title: string;
+  authors: string[];
+};
