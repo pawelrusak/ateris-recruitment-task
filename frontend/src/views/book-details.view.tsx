@@ -1,5 +1,6 @@
 import { useParams } from "react-router";
 import { useBookDetails } from "@/helpers/hooks.books";
+import { useBookVotes, useToggleBookVote } from "@/helpers/hooks.votes";
 
 type BookDetailsParams = {
   owner: string;
@@ -15,6 +16,9 @@ const BookDetailsView = () => {
     isError,
   } = useBookDetails(params.id ?? "", params.owner ?? "");
 
+  const { data: vote } = useBookVotes(params.id ?? "");
+  const toggle = useToggleBookVote(params.id ?? "");
+
   if (isLoading) {
     return <div>Loading book details...</div>;
   }
@@ -27,11 +31,15 @@ const BookDetailsView = () => {
     return <div>No book details available.</div>;
   }
 
+  const liked = vote?.liked ?? false;
+  const votesCount = vote?.votes_count ?? 0;
+
   return (
     <main>
       <header>
         <h1>Book Details</h1>
       </header>
+
       <section>
         <h2>{book.title}</h2>
         <p>
@@ -39,6 +47,13 @@ const BookDetailsView = () => {
         </p>
         <p>
           <strong>Published At:</strong> {book.published_at}
+        </p>
+
+        <p>
+          <button disabled={toggle.isPending} onClick={() => toggle.mutate()}>
+            {liked ? "Unlike" : "Like"}
+          </button>
+          <strong>Likes:</strong> {votesCount}
         </p>
       </section>
     </main>
