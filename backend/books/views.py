@@ -29,7 +29,10 @@ class ExternalBookListViewSet(viewsets.ViewSet):
         data = self.google_books_service.fetch_books_by_author(author)
         books = self.google_books_service.transform_google_books_response(data)
 
-        return Response({"books": books})
+        data = {
+            "books": books
+        }
+        return Response(data)
 
 
 class BookListCreatedViewSet(viewsets.ViewSet):
@@ -45,14 +48,16 @@ class BookListCreatedViewSet(viewsets.ViewSet):
         google_volume_id: str = request.data.get("google_volume_id", "")
 
         if not google_volume_id:
-            message = {"error": "google_volume_id field is required."}
+            data = {
+                "error": "google_volume_id field is required."
+            }
             return Response(
-                message,
+                data,
                 status=status.HTTP_422_UNPROCESSABLE_ENTITY
             )
 
-        data = self.google_books_service.fetch_book_item_by_id(google_volume_id)  # noqa
-        book_detail = self.google_books_service.transform_google_book_detail_response(data)  # noqa
+        payload = self.google_books_service.fetch_book_item_by_id(google_volume_id)  # noqa
+        book_detail = self.google_books_service.transform_google_book_detail_response(payload)  # noqa
 
         serializer = BookSerializer(
             data=book_detail,
@@ -64,10 +69,10 @@ class BookListCreatedViewSet(viewsets.ViewSet):
             data = serializer.data
             return Response(data, status=status.HTTP_201_CREATED)
 
-        return Response(
-            {"error": "Invalid data"},
-            status=status.HTTP_400_BAD_REQUEST
-        )
+        data = {
+            "error": "Invalid data"
+        }
+        return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
     def list(self, request: Request) -> Response:
         """
@@ -81,10 +86,10 @@ class BookListCreatedViewSet(viewsets.ViewSet):
             try:
                 user = User.objects.get(login=query_owner)
             except User.DoesNotExist:
-                return Response(
-                    {"error": "Books of owner not found."},
-                    status=status.HTTP_404_NOT_FOUND,
-                )
+                data = {
+                    "error": "Owner of books not found."
+                }
+                return Response(data, status=status.HTTP_404_NOT_FOUND)
 
             books = Book.objects.filter(owner=user)
         else:
@@ -100,19 +105,19 @@ class BookListCreatedViewSet(viewsets.ViewSet):
         """
         owner_login = (request.query_params.get("owner") or "").strip()
         if not owner_login:
-            return Response(
-                {"error": "Query param 'owner' is required."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            data = {
+                "error": "Query param 'owner' is required."
+            }
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             book = Book.objects.get(pk=pk, owner__login=owner_login)
 
         except Book.DoesNotExist:
-            return Response(
-                {"error": "Book not found."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
+            data = {
+                "error": "Book with the given ID and owner not found."
+            }
+            return Response(data, status=status.HTTP_404_NOT_FOUND)
 
         serializer = BookSerializer(book)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -120,7 +125,7 @@ class BookListCreatedViewSet(viewsets.ViewSet):
 
 class VoteViewSet(viewsets.ViewSet):
     @action(detail=True, methods=["post"], url_path="toggle")
-    def toggle(self, request, pk):
+    def toggle(self, request: Request, pk) -> Response:
         book = get_object_or_404(Book, pk=pk)
 
         vote, created = BookVote.objects.get_or_create(
@@ -133,18 +138,21 @@ class VoteViewSet(viewsets.ViewSet):
 
         votes_count = BookVote.objects.filter(book=book).count()
 
-        return Response({"liked": liked, "votes_count": votes_count})
+        data = {
+            "liked": liked,
+            "votes_count": votes_count,
+        }
+        return Response(data)
 
-    def retrieve(self, request, pk):
+    def retrieve(self, request: Request, pk) -> Response:
 
         book = get_object_or_404(Book, pk=pk)
 
         liked = BookVote.objects.filter(user=request.user, book=book).exists()
         votes_count = BookVote.objects.filter(book=book).count()
 
-        return Response(
-            {
-                "liked": liked,
-                "votes_count": votes_count,
-            }
-        )
+        data = {
+            "liked": liked,
+            "votes_count": votes_count,
+        }
+        return Response(data)
