@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { ACCESS_TOKEN } from "@/services/api.config";
-import { votesService } from "@/services/votes.services";
+import { ACCESS_TOKEN } from "@/shared/api.config";
+import { votesService } from "@/features/books/services/votes.services";
 
 export type VoteStatus = {
   liked: boolean;

@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router";
-import { useLogout } from "@/helpers/hooks.auth";
+import { useLogout } from "@/features/auth/hooks/hooks.auth";
 
 const PrivateLayout = () => {
   const logout = useLogout();

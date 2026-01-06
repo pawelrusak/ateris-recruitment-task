@@ -1,5 +1,5 @@
-import api from "./api.config";
-import type { VoteStatus } from "@/helpers/hooks.votes";
+import api from "@/shared/api.config";
+import type { VoteStatus } from "@/features/books/hooks/hooks.votes";
 
 export const votesService = {
   getBookVotes: async (bookId: string): Promise<VoteStatus> => {

@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router";
-import { ACCESS_TOKEN } from "../services/api.config";
+import { ACCESS_TOKEN } from "@/shared/api.config";
 
 const ProtectedRoute = () => {
   const isAuthorized = localStorage.getItem(ACCESS_TOKEN);

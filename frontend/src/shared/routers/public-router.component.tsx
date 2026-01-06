@@ -1,5 +1,5 @@
 import { Navigate, Outlet, useLocation } from "react-router";
-import { ACCESS_TOKEN } from "../services/api.config";
+import { ACCESS_TOKEN } from "@/shared/api.config";
 
 const PublicRoute = () => {
   const location = useLocation();

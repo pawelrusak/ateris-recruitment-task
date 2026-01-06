@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { booksService } from "../services/books.services";
-import { ACCESS_TOKEN } from "@/services/api.config";
+import { ACCESS_TOKEN } from "@/shared/api.config";
 import toast from "react-hot-toast";
 
 type Owner = string | null;

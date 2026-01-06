@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { useExternalBooks, useCreateExternalBook } from "@/helpers/hooks.books";
+import {
+  useExternalBooks,
+  useCreateExternalBook,
+} from "@/features/books/hooks/hooks.books";
 
-import BooksSearchResult from "@/components/book-search-result.component";
+import BooksSearchResult from "@/features/books/ui/book-search-result.component";
 
 const ExternalBooksView = () => {
   const [author, setAuthor] = useState("");
@@ -23,7 +26,6 @@ const ExternalBooksView = () => {
   const handleBookSelect = (bookId: string) => {
     console.log(`Selected book ID: ${bookId}`);
     createBookMutation.mutate(bookId);
-    // Here you can add logic to add the book to the user's collection
   };
 
   return (

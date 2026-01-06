@@ -1,13 +1,3 @@
-export type AuthCredential = {
-  login: string;
-  password: string;
-};
-
-export type Tokens = {
-  access: string;
-  refresh: string;
-};
-
 type BookOwner = {
   id: number;
   login: string;

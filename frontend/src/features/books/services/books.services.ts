@@ -1,5 +1,5 @@
-import api from "./api.config";
-import type { UserBook, ExternalBook } from "@/types";
+import api from "@/shared/api.config";
+import type { UserBook, ExternalBook } from "@/features/books/types";
 
 type ExternalBooksResponse = {
   books: ExternalBook[];

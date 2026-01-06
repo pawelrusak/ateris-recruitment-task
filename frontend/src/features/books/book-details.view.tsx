@@ -1,6 +1,9 @@
 import { useParams } from "react-router";
-import { useBookDetails } from "@/helpers/hooks.books";
-import { useBookVotes, useToggleBookVote } from "@/helpers/hooks.votes";
+import { useBookDetails } from "@/features/books/hooks/hooks.books";
+import {
+  useBookVotes,
+  useToggleBookVote,
+} from "@/features/books/hooks/hooks.votes";
 
 type BookDetailsParams = {
   owner: string;

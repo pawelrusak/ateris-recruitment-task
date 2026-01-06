@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { useParams } from "react-router";
 
-import { useBooks } from "@/helpers/hooks.books";
+import { useBooks } from "@/features/books/hooks/hooks.books";
 
 const BooksListView = () => {
   const params = useParams<{ owner?: string }>();

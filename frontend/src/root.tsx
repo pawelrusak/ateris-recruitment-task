@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import BookDetailsView from "@/views/book-details.view";
-import BooksListView from "@/views/books-list.view";
-import ExternalBooksView from "@/views/external-books.view";
-import LoginView from "@/views/login.view";
-import PrivateLayout from "@/layout/private.layout";
-import ProtectedRoute from "@/helpers/protected-router.component";
-import PublicRoute from "@/helpers/public-router.component";
+import BookDetailsView from "@/features/books/book-details.view";
+import BooksListView from "@/features/books/books-list.view";
+import ExternalBooksView from "@/features/books/external-books.view";
+import LoginView from "@/features/auth/login.view";
+import PrivateLayout from "@/shared/layout/private.layout";
+import ProtectedRoute from "@/shared/routers/protected-router.component";
+import PublicRoute from "@/shared/routers//public-router.component";
 import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient();

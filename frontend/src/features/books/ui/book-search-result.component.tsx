@@ -1,4 +1,4 @@
-import type { ExternalBook } from "@/types";
+import type { ExternalBook } from "@/features/books/types";
 
 type ExternalBookId = ExternalBook["id"];
 

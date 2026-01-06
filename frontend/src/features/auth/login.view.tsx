@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 
-import { useAuth } from "@/helpers/hooks.auth";
-import type { AuthCredential } from "@/types";
+import { useAuth } from "@/features/auth/hooks/hooks.auth";
+import type { AuthCredential } from "@/features/auth/types";
 
 export const LoginView = () => {
   const auth = useAuth();

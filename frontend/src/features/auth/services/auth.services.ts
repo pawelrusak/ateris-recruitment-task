@@ -1,6 +1,5 @@
-import api, { ACCESS_TOKEN, REFRESH_TOKEN } from "./api.config";
-
-import type { AuthCredential, Tokens } from "@/types";
+import api, { ACCESS_TOKEN, REFRESH_TOKEN } from "@/shared/api.config";
+import type { AuthCredential, Tokens } from "@/features/auth/types";
 
 export const authService = {
   loginRequest: async (credentials: AuthCredential) => {
